@@ -5,7 +5,7 @@ A customizable Rubik's Cube (333 & 444) blindfolded scramble generator.
 The difficulty of a 3bf/4bf scramble is almost sufficiently determined by its conjugacy class.
 We first present the following definition:
 + The *orientation* (**ori**) of an edge/corner: for each of the 12 physical edges, we define its characteristic face as UF, UR, UB, UL, DF, DR, DB, DL, FR, FL, BR, BL, respectively. The orientation of an edge is defined as the number of clockwise rotations from the characteristic face of its current position to its physical characteristic face, thus the ori takes values in $\mathbb{Z}_2$. For corners, the characteristic face are UFL, UBL, UBR, UFR, DFL, DBL, DBR, DFR, resp., and the ori takes values in $\mathbb{Z}_3$. For a valid 3bf/4bf state, the ori sum of all edges/corners is 0. The wings/x-centers of 4bf have no ori.
-+ The $(j,k)$-cycle: A cycle is defined as a sequence of edges/corners $\{e_1, e_2, \cdots, e_j\}$ such that the physical piece $e_{(i+1)\%j}$ is at the position of $e_i$ for $i=1,2,\cdots,j$. The cycle is called a $(j,k)$-cycle if it contains $j$ pieces and the ori sum is $k$ (don't forget to take modulo over 2 or 3, for edge/corner resp.). For complicity of representation, we define pieces already on its position as a $(1,ori)$-cycle. A $(1,1)$-cycle of edges is called a *flip*, and a $(1,1)$/$(1,2)$-cycle of corners is called a *twist*.
++ The $(j,k)$-cycle: A cycle is defined as a sequence of edges/corners $\{e_1, e_2, \cdots, e_j\}$ such that the physical piece $e_{(i+1)\text{mod }j}$ is at the position of $e_i$ for $i=1,2,\cdots,j$. The cycle is called a $(j,k)$-cycle if it contains $j$ pieces and the ori sum is $k$ (don't forget to take modulo over 2 or 3, for edge/corner resp.). For complicity of representation, we define pieces already on its position as a $(1,ori)$-cycle. A $(1,1)$-cycle of edges is called a *flip*, and a $(1,1)$/$(1,2)$-cycle of corners is called a *twist*.
 + A $(j,0)$-cycle is also called a closed $j$-cycle, and a $(j,k)$-cycle with $k\neq0$ is also called an open $j$-cycle. A closed $(2k+1)$-cycle ($k\geq 1$) can be decomposed into $k$ closed 3-cycles, thus can be solved individually.
 + The *conjugacy class* (**cc**): In group theory, two elements $a,b\in G$ are conjugate if there exists an element $g\in G$ such that $g^{-1}ag=b$, and the maximal set of elements conjugate to each other are called a conjugacy class. In the context of Rubik's Cube, a conjugacy class is completely determined by all its cycles $(j_i, k_i)$.
 + The parity of a cycle/conjugacy class: odd-cycles have parity 0 and they can be solved purely by 3-cycles, while even-cycles have parity 1 and they can be solved by 3-cycles plus one 2-cycle. The parity of a conjugacy class is the parity sum of its cycles. For a valid 3bf state, the edge parity is always equal to the corner parity. For 4bf, the parity of wings, corners and x-centers are independent.
@@ -600,7 +600,7 @@ Expectation = 0.583333
 | 23     | 206032439164800  | 0.0634596078689888 |
 | 24     | 45131501617225   | 0.0139008566164519 |
 
-Sum = 3246670537110000 = $\frac{24!}{24^6}$
+Sum = 3246670537110000 = $24!/24^6$
 
 Mean = 20.0
 
@@ -646,7 +646,7 @@ Sum = 490497638400 = $2^{10}\times 12!$
 
 ## Notes
 
-+ Thanks for github copilot, without which a lazy boy like me may never write this readme.
++ Thanks to github copilot, without which a lazy boy like me may never write this readme.
 + Thank [Shuang Che](https://github.com/cs0x7f/min2phase) for the [min2phase algorithm](https://github.com/cs0x7f/min2phase) for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube. After years away from cubing, it seems that the [5x5x5 solver](https://github.com/cs0x7f/cube555) has come out, ~~but I will never ever write 5bf version of BLD-master, I hate it~~.
 
 ## License GPL-3.0
