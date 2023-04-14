@@ -2,12 +2,12 @@
 
 A customizable Rubik's Cube (333 & 444) blindfolded scramble generator.
 
-The difficulty of a 3bf/4bf scramble is almost sufficiently determined by its conjugacy class.
+The difficulty of a 3bf/4bf scramble is sufficiently determined by its conjugacy class.
 We first present the following definition:
 + The *orientation* (**ori**) of an edge/corner: for each of the 12 physical edges, we define its characteristic face as UF, UR, UB, UL, DF, DR, DB, DL, FR, FL, BR, BL, respectively. The orientation of an edge is defined as the number of clockwise rotations from the characteristic face of its current position to its physical characteristic face, thus the ori takes values in $\mathbb{Z}_2$. For corners, the characteristic face are UFL, UBL, UBR, UFR, DFL, DBL, DBR, DFR, resp., and the ori takes values in $\mathbb{Z}_3$. For a valid 3bf/4bf state, the ori sum of all edges/corners is 0. The wings/x-centers of 4bf have no ori.
 + The $(j,k)$-cycle: A cycle is defined as a sequence of edges/corners $\{e_1, e_2, \cdots, e_j\}$ such that the physical piece $e_{(i+1)\text{mod }j}$ is at the position of $e_i$ for $i=1,2,\cdots,j$. The cycle is called a $(j,k)$-cycle if it contains $j$ pieces and the ori sum is $k$ (don't forget to take modulo over 2 or 3, for edge/corner resp.). For complicity of representation, we define pieces already on its position as a $(1,ori)$-cycle. A $(1,1)$-cycle of edges is called a *flip*, and a $(1,1)$/$(1,2)$-cycle of corners is called a *twist*.
 + A $(j,0)$-cycle is also called a closed $j$-cycle, and a $(j,k)$-cycle with $k\neq0$ is also called an open $j$-cycle. A closed $(2k+1)$-cycle ($k\geq 1$) can be decomposed into $k$ closed 3-cycles, thus can be solved individually.
-+ The *conjugacy class* (**cc**): In group theory, two elements $a,b\in G$ are conjugate if there exists an element $g\in G$ such that $g^{-1}ag=b$, and the maximal set of elements conjugate to each other are called a conjugacy class. In the context of Rubik's Cube, a conjugacy class is completely determined by all its cycles $(j_i, k_i)$.
++ The *conjugacy class* (**cc**): In group theory, two elements $a,b\in G$ are conjugate if there exists an element $g\in G$ such that $g^{-1}ag=b$, and the maximal set of elements conjugate to each other are called a conjugacy class. In the context of Rubik's Cube, a conjugacy class is completely determined by all its cycles $(j_i, k_i)$. It's quite obvious, as $g$ is known as *set up* in the bf community, which acts on closed 3-cycles $a$ as another closed 3-cycle.
 + The parity of a cycle/conjugacy class: odd-cycles have parity 0 and they can be solved purely by 3-cycles, while even-cycles have parity 1 and they can be solved by 3-cycles plus one 2-cycle. The parity of a conjugacy class is the parity sum of its cycles. For a valid 3bf state, the edge parity is always equal to the corner parity. For 4bf, the parity of wings, corners and x-centers are independent.
 
 For common 3bf/4bf players, they use one buffer to implement 3-cycles, so the cycle containing the buffer should have a special treatment, and we call it the first cycle.
@@ -22,29 +22,29 @@ An example for generating 10 3bf scrambles with edge code length 10 or 11 and co
 
 ```csharp
 var cc = new Cube3Class{
-    parityLimit = x => true,
-    edgeLimit = x => x.CodeLength is >=10 and < 12 && x.FlipCount == 0,
-    cornerLimit = x => x.CodeLength is >=6 and < 8 && x.TwistCount == 0,
+    parityLimit = x => x,
+    edgeLimit = x => x.CodeLength is >=10 and <= 12 && x.FlipCount == 0,
+    cornerLimit = x => x.CodeLength is >=6 and <= 8 && x.TwistCount == 0,
 };
 cc.Init();
 
-Console.WriteLine($"Probability={cc.probability}"); // Probability=0.28684646382847756
+Console.WriteLine($"Probability={cc.probability}"); // Probability=0.8693965505366232
 
 for (int i = 0; i < 10; i++)
 {
     var cube = cc.GetCube3();
     System.Console.Write($"{i+1}. ");
     Console.WriteLine(cube.GetScramble());
-    // 1. L' R2 D2 F' L2 D2 F' U2 B' U2 L2 R2 F  R  D' R  U' L' B  R  D' 
-    // 2. U  F  U2 F' L2 B' R2 U2 F  L2 F' D2 F2 D' B  L  D' F2 U' R2    
-    // 3. D' B' U  R2 B' L2 R2 B  D2 B' R2 B' R2 F2 R' U' L  F  D  U' B2 
-    // 4. U2 R  B  D  R2 B2 U' R2 U2 F2 D  F2 U  R2 B  F' D' R' B  R2 U2 
-    // 5. R  F  R  D  R2 U' F2 U  L2 F2 D2 R2 D' L2 R  B  D2 F' U2 L  F2  
-    // 6. U' D2 R2 F  L2 F  R2 F' L2 U2 B  L2 U2 D  L  B' F2 R  U  B  L2  
-    // 7. F  L2 U' R2 U2 F2 U  L2 B2 U' L2 U2 R' B  U  L  U2 R2 D2 B2 U   
-    // 8. F2 R2 F  L2 F' U2 R2 D2 R2 B2 L2 F' L' U2 B' D' L2 U  R' F      
-    // 9. F  D' F2 U  R2 U' B2 U2 R2 D  F2 L2 U2 F' D  R2 D' B  R' D2 L   
-    // 10. U2 F  L2 U2 F  R2 F  L2 F2 D2 F' D' F2 R  U  B  D2 R' D2 U2 R2
+    // 1. F2 D' R2 D  L2 R2 D2 R2 D' R2 U' B  U' L  D  B2 R' B' R  D2 U  
+    // 2. L  U  B' R  U  D  B' R  U2 F' R2 F2 U2 D2 F  R2 U2 F2 D2 F' U  
+    // 3. F' U  L' D2 L' U2 L' R2 B2 D2 R  D2 R2 U' B2 R' F' U2 R' B  U  
+    // 4. D2 B2 R2 B2 U' L2 U' L2 B2 U  F2 U' R' F' L' B' R' B2 U2 B  D  
+    // 5. L2 B2 R' U2 R' U2 F2 L' B2 R2 B2 U2 B  D  L  F' L' B  R' U2 F2 
+    // 6. F  R  L2 F  D' F  D' F' D2 B' L2 F  U2 F  R2 B' L2 R  B2       
+    // 7. R2 B2 R2 D2 F2 D' U2 B2 R2 D  L2 D' B  R  D' R2 U2 F  D'       
+    // 8. L' F2 D2 R2 F' D2 U2 R2 U2 F' D2 U2 R2 D' F' L2 D' R' D2 L' U2 
+    // 9. U  F2 U2 D' L  B  L' B2 U2 D2 R2 U2 R' D2 R' U2 F2 L' D' F     
+    // 10. B2 R2 F2 L2 D2 F' L2 F2 D2 B' R2 D' F2 D  R' U2 R' D  U
 }
 ```
 
@@ -82,121 +82,179 @@ To use the program well, it's best to customize your need in `Program.cs` by you
 ### The distribution of cycle code length and flip/twist count
 
 *Notation: 10+1 means cycle code length 10 with 1 flip/twist.*
+*Order by: probability*
 
 #### Edges:
 
 | Code Length | Count | Probability |
 | --- | --- | --- |
-| 0+0 | 1 | 1.019373E-12 |
-| 0+1 | 11 | 1.12131E-11 |   
-| 0+2 | 55 | 5.606551E-11 |  
-| 0+3 | 165 | 1.681965E-10 | 
-| 0+4 | 330 | 3.363931E-10 | 
-| 0+5 | 462 | 4.709503E-10 | 
-| 0+6 | 462 | 4.709503E-10 | 
-| 0+7 | 330 | 3.363931E-10 | 
-| 0+8 | 165 | 1.681965E-10 | 
-| 0+9 | 55 | 5.606551E-11 |  
-| 0+10 | 11 | 1.12131E-11 |  
-| 0+11 | 1 | 1.019373E-12 |  
-| 1+0 | 22 | 2.24262E-11 |   
-| 1+1 | 220 | 2.24262E-10 |  
-| 1+2 | 990 | 1.009179E-9 |  
-| 1+3 | 2640 | 2.691144E-9 | 
-| 1+4 | 4620 | 4.709503E-9 | 
-| 1+5 | 5544 | 5.651403E-9 | 
-| 1+6 | 4620 | 4.709503E-9 | 
-| 1+7 | 2640 | 2.691144E-9 | 
-| 1+8 | 990 | 1.009179E-9 |  
-| 1+9 | 220 | 2.24262E-10 |  
-| 1+10 | 22 | 2.24262E-11 |  
-| 2+0 | 440 | 4.485241E-10 | 
-| 2+1 | 3960 | 4.036717E-9 | 
-| 2+2 | 15840 | 1.614687E-8 |
-| 2+3 | 36960 | 3.767602E-8 |
-| 2+4 | 55440 | 5.651403E-8 |
-| 2+5 | 55440 | 5.651403E-8 |
-| 2+6 | 36960 | 3.767602E-8 |
-| 2+7 | 15840 | 1.614687E-8 |
-| 2+8 | 3960 | 4.036717E-9 |
-| 2+9 | 440 | 4.485241E-10 |
-| 3+0 | 8140 | 8.297695E-9 |
-| 3+1 | 65340 | 6.660583E-8 |
-| 3+2 | 229680 | 2.341296E-7 |
-| 3+3 | 462000 | 4.709503E-7 |
-| 3+4 | 582120 | 5.933974E-7 |
-| 3+5 | 471240 | 4.803693E-7 |
-| 3+6 | 240240 | 2.448941E-7 |
-| 3+7 | 71280 | 7.26609E-8 |
-| 3+8 | 9900 | 1.009179E-8 |
+| 12+0 | 215574955264 | 0.219751 |
+| 11+0 | 171162393600 | 0.174478 |
+| 13+0 | 121975541248 | 0.124339 |
+| 11+1 | 100186352640 | 0.102127 |
+| 10+1 | 82582917120 | 0.0841828 |
+| 10+0 | 61002965760 | 0.0621848 |
+| 12+1 | 52445828864 | 0.0534619 |
+| 14+0 | 31151605760 | 0.0317551 |
+| 9+1 | 29774997120 | 0.0303518 | 
+| 10+2 | 23045045760 | 0.0234915 |
+| 9+2 | 19837635840 | 0.0202219 | 
+| 9+0 | 13284416640 | 0.0135418 | 
+| 13+1 | 11560299520 | 0.0117843 |
+| 11+2 | 10980541440 | 0.0111933 |
+| 8+2 | 7244497920 | 0.00738484 | 
+| 8+1 | 6516026880 | 0.00664226 | 
+| 9+3 | 3488390400 | 0.00355597 | 
+| 15+0 | 3229219840 | 0.00329178 |
+| 8+3 | 3160058880 | 0.00322128 | 
+| 8+0 | 2052272640 | 0.00209203 | 
+| 12+2 | 1999486720 | 0.00203822 |
+| 7+2 | 1593789120 | 0.00162467 | 
+| 10+3 | 1478400000 | 0.00150704 |
+| 7+3 | 1170597120 | 0.00119327 | 
+| 7+1 | 1009008000 | 0.00102856 | 
+| 14+1 | 887040000 | 0.000904225 |
+| 8+4 | 389368320 | 0.000396912 | 
+| 7+4 | 374996160 | 0.000382261 | 
+| 6+3 | 258978720 | 0.000263996 | 
+| 6+2 | 247373280 | 0.000252166 | 
+| 7+0 | 244276032 | 0.000249008 |
+| 11+3 | 206976000 | 0.000210986 |
+| 9+4 | 141778560 | 0.000144525 |
+| 6+4 | 141150240 | 0.000143885 |
+| 6+1 | 120216096 | 0.000122545 |
+| 13+2 | 97574400 | 9.94647E-05 |
+| 16+0 | 92252160 | 9.40394E-05 |
+| 5+3 | 40286400 | 4.10669E-05 |
+| 6+5 | 35282016 | 3.59655E-05 |
+| 7+5 | 33973632 | 3.46318E-05 |
+| 5+4 | 31416000 | 3.20246E-05 |
+| 5+2 | 29494080 | 3.00655E-05 |
+| 6+0 | 23581536 | 2.40384E-05 |
+| 5+5 | 13527360 | 1.37894E-05 |
+| 10+4 | 13305600 | 1.35634E-05 |
+| 5+1 | 11605440 | 1.18303E-05 |
+| 15+1 | 10644480 | 1.08507E-05 |
+| 8+5 | 10053120 | 1.02479E-05 |
+| 4+4 | 4897200 | 4.99207E-06 |
+| 4+3 | 4804800 | 4.89788E-06 |
+| 12+3 | 4435200 | 4.52112E-06 |
+| 4+5 | 3030720 | 3.08943E-06 |
+| 4+2 | 2845920 | 2.90105E-06 |
+| 5+6 | 2735040 | 2.78803E-06 |
+| 6+6 | 2387616 | 2.43387E-06 |
+| 5+0 | 1911360 | 1.94839E-06 |
+| 4+6 | 1071840 | 1.0926E-06 |
+| 4+1 | 939840 | 9.58047E-07 |
+| 3+4 | 582120 | 5.93397E-07 |
+| 7+6 | 517440 | 5.27464E-07 |
+| 3+5 | 471240 | 4.80369E-07 |
+| 3+3 | 462000 | 4.7095E-07 |
+| 9+5 | 443520 | 4.52112E-07 |
+| 3+6 | 240240 | 2.44894E-07 |
+| 3+2 | 229680 | 2.3413E-07 |
+| 4+7 | 179520 | 1.82998E-07 |
+| 5+7 | 137280 | 1.3994E-07 |
+| 4+0 | 133320 | 1.35903E-07 |
+| 3+7 | 71280 | 7.26609E-08 |
+| 3+1 | 65340 | 6.66058E-08 |
+| 2+4 | 55440 | 5.6514E-08 |
+| 2+5 | 55440 | 5.6514E-08 |
+| 2+3 | 36960 | 3.7676E-08 |
+| 2+6 | 36960 | 3.7676E-08 |
+| 2+2 | 15840 | 1.61469E-08 |
+| 2+7 | 15840 | 1.61469E-08 |
+| 6+7 | 15840 | 1.61469E-08 |
+| 3+8 | 9900 | 1.00918E-08 |
+| 3+0 | 8140 | 8.2977E-09 |
+| 4+8 | 6600 | 6.72786E-09 |
+| 1+5 | 5544 | 5.6514E-09 |
+| 1+4 | 4620 | 4.7095E-09 |
+| 1+6 | 4620 | 4.7095E-09 |
+| 2+1 | 3960 | 4.03672E-09 |
+| 2+8 | 3960 | 4.03672E-09 |
+| 1+3 | 2640 | 2.69114E-09 |
+| 1+7 | 2640 | 2.69114E-09 |
+| 1+2 | 990 | 1.00918E-09 |
+| 1+8 | 990 | 1.00918E-09 |
+| 0+5 | 462 | 4.7095E-10 |
+| 0+6 | 462 | 4.7095E-10 |
+| 2+0 | 440 | 4.48524E-10 |
+| 2+9 | 440 | 4.48524E-10 |
+| 0+4 | 330 | 3.36393E-10 |
+| 0+7 | 330 | 3.36393E-10 |
+| 1+1 | 220 | 2.24262E-10 |
+| 1+9 | 220 | 2.24262E-10 |
 | 3+9 | 220 | 2.24262E-10 |
-| 4+0 | 133320 | 1.359028E-7 |
-| 4+1 | 939840 | 9.580474E-7 |
-| 4+2 | 2845920 | 2.901054E-6 |
-| 4+3 | 4804800 | 4.897883E-6 |
-| 4+4 | 4897200 | 4.992073E-6 |
-| 4+5 | 3030720 | 3.089434E-6 |
-| 4+6 | 1071840 | 1.092605E-6 |
-| 4+7 | 179520 | 1.829978E-7 |
-| 4+8 | 6600 | 6.727861E-9 |
-| 5+0 | 1911360 | 1.948389E-6 |
-| 5+1 | 11605440 | 1.183027E-5 |
-| 5+2 | 29494080 | 3.006547E-5 |
-| 5+3 | 40286400 | 4.106686E-5 |
-| 5+4 | 31416000 | 3.202462E-5 |
-| 5+5 | 13527360 | 1.378942E-5 |
-| 5+6 | 2735040 | 2.788026E-6 |
-| 5+7 | 137280 | 1.399395E-7 |
-| 6+0 | 23581536 | 2.403838E-5 |
-| 6+1 | 120216096 | 1.22545E-4 |
-| 6+2 | 247373280 | 2.521656E-4 |
-| 6+3 | 258978720 | 2.639959E-4 |
-| 6+4 | 141150240 | 1.438847E-4 |
-| 6+5 | 35282016 | 3.596553E-5 |
-| 6+6 | 2387616 | 2.433871E-6 |
-| 6+7 | 15840 | 1.614687E-8 |
-| 7+0 | 244276032 | 2.490084E-4 |
-| 7+1 | 1009008000 | 1.028555E-3 |
-| 7+2 | 1593789120 | 1.624665E-3 |
-| 7+3 | 1170597120 | 1.193275E-3 |
-| 7+4 | 374996160 | 3.822609E-4 |
-| 7+5 | 33973632 | 3.46318E-5 |
-| 7+6 | 517440 | 5.274643E-7 |
-| 8+0 | 2052272640 | 2.092031E-3 |
-| 8+1 | 6516026880 | 6.642261E-3 |
-| 8+2 | 7244497920 | 7.384845E-3 |
-| 8+3 | 3160058880 | 3.221278E-3 |
-| 8+4 | 389368320 | 3.969115E-4 |
-| 8+5 | 10053120 | 1.024788E-5 |
-| 9+0 | 13284416640 | 1.354177E-2 |
-| 9+1 | 29774997120 | 3.035183E-2 |
-| 9+2 | 19837635840 | 2.022195E-2 |
-| 9+3 | 3488390400 | 3.555971E-3 |
-| 9+4 | 141778560 | 1.445252E-4 |
-| 9+5 | 443520 | 4.521123E-7 |
-| 10+0 | 61002965760 | 6.218477E-2 |
-| 10+1 | 82582917120 | 8.418279E-2 |
-| 10+2 | 23045045760 | 2.34915E-2 |
-| 10+3 | 1478400000 | 1.507041E-3 |
-| 10+4 | 13305600 | 1.356337E-5 |
-| 11+0 | 171162393600 | 1.744783E-1 |
-| 11+1 | 100186352640 | 1.021273E-1 |
-| 11+2 | 10980541440 | 1.119327E-2 |
-| 11+3 | 206976000 | 2.109857E-4 |
-| 12+0 | 215574955264 | 2.197513E-1 |
-| 12+1 | 52445828864 | 5.346186E-2 |
-| 12+2 | 1999486720 | 2.038223E-3 |
-| 12+3 | 4435200 | 4.521123E-6 |
-| 13+0 | 121975541248 | 1.243386E-1 |
-| 13+1 | 11560299520 | 1.178426E-2 |
-| 13+2 | 97574400 | 9.94647E-5 |
-| 14+0 | 31151605760 | 3.17551E-2 |
-| 14+1 | 887040000 | 9.042245E-4 |
-| 15+0 | 3229219840 | 3.291779E-3 |
-| 15+1 | 10644480 | 1.085069E-5 |
-| 16+0 | 92252160 | 9.403935E-5 |
+| 0+3 | 165 | 1.68197E-10 |
+| 0+8 | 165 | 1.68197E-10 |
+| 0+2 | 55 | 5.60655E-11 |
+| 0+9 | 55 | 5.60655E-11 |
+| 1+0 | 22 | 2.24262E-11 |
+| 1+10 | 22 | 2.24262E-11 |
+| 0+1 | 11 | 1.12131E-11 |
+| 0+10 | 11 | 1.12131E-11 |
+| 0+0 | 1 | 1.01937E-12 |
+| 0+11 | 1 | 1.01937E-12 |
 
-A shorter version (view one flip as 2 codes):
+#### Corners
+
+| Code Length | Count | Probability |
+| --- | --- | --- |
+| 8+0 | 19292256 | 0.218783 |
+| 7+0 | 16528617 | 0.187442 |
+| 7+1 | 11369484 | 0.128935 |
+| 6+1 | 10542798 | 0.11956 |
+| 9+0 | 7302393 | 0.0828125 |
+| 6+0 | 4468527 | 0.0506752 |
+| 8+1 | 3470040 | 0.0393519 |
+| 5+2 | 3333960 | 0.0378086 |
+| 6+2 | 3245508 | 0.0368056 |
+| 5+1 | 2891700 | 0.0327932 |
+| 4+2 | 929880 | 0.0105453 |
+| 7+2 | 714420 | 0.00810185 |
+| 4+3 | 695520 | 0.00788752 |
+| 10+0 | 688905 | 0.0078125 |
+| 5+0 | 686070 | 0.00778035 |
+| 5+3 | 589680 | 0.00668724 |
+| 4+1 | 446040 | 0.0050583 |
+| 3+3 | 196560 | 0.00222908 |
+| 9+1 | 153090 | 0.00173611 |
+| 3+2 | 143640 | 0.00162894 |
+| 3+4 | 105840 | 0.00120027 |
+| 4+4 | 75600 | 0.000857339 |
+| 4+0 | 72765 | 0.000825189 |
+| 6+3 | 68040 | 0.000771605 |
+| 3+1 | 47250 | 0.000535837 |
+| 2+3 | 30240 | 0.000342936 |
+| 2+4 | 30240 | 0.000342936 |
+| 2+2 | 15120 | 0.000171468 |
+| 2+5 | 12096 | 0.000137174 |
+| 3+5 | 6048 | 6.85871E-05 |
+| 3+0 | 5859 | 6.64438E-05 |
+| 1+4 | 5040 | 5.71559E-05 |
+| 1+5 | 4032 | 4.57247E-05 |
+| 2+1 | 3780 | 4.28669E-05 |
+| 1+3 | 3360 | 3.81039E-05 |
+| 1+6 | 1344 | 1.52416E-05 |
+| 1+2 | 1260 | 1.4289E-05 |
+| 0+5 | 672 | 7.62079E-06 |
+| 0+4 | 560 | 6.35066E-06 |
+| 0+6 | 448 | 5.08053E-06 |
+| 2+0 | 378 | 4.28669E-06 |
+| 0+3 | 280 | 3.17533E-06 |
+| 1+1 | 252 | 2.8578E-06 |
+| 0+7 | 128 | 1.45158E-06 |
+| 0+2 | 84 | 9.52599E-07 |
+| 1+0 | 21 | 2.3815E-07 |
+| 0+1 | 14 | 1.58766E-07 |
+| 0+0 | 1 | 1.13405E-08 |
+
+### The distribution of code length
+
+*Code Length = Cycle Code Length + 2 * Flip/Twist Count*
+
+#### Edge
 
 | Alg Count | Count | Probability |
 | --- | --- | --- |
@@ -224,60 +282,7 @@ A shorter version (view one flip as 2 codes):
 | 21 | 242 | 2.466882E-10 |
 | 22 | 1 | 1.019373E-12 |
 
-#### Corners
-
-| Code Length | Count | Probability |
-| --- | --- | --- |
-| 0+0 | 1 | 1.019373E-12 |
-| 0+1 | 14 | 1.427122E-11 |
-| 0+2 | 84 | 8.562732E-11 |
-| 0+3 | 280 | 2.854244E-10 |
-| 0+4 | 560 | 5.708488E-10 |
-| 0+5 | 672 | 6.850186E-10 |
-| 0+6 | 448 | 4.566791E-10 |
-| 0+7 | 128 | 1.304797E-10 |
-| 1+0 | 21 | 2.140683E-11 |
-| 1+1 | 252 | 2.56882E-10 |
-| 1+2 | 1260 | 1.28441E-9 |
-| 1+3 | 3360 | 3.425093E-9 |
-| 1+4 | 5040 | 5.137639E-9 |
-| 1+5 | 4032 | 4.110112E-9 |
-| 1+6 | 1344 | 1.370037E-9 |
-| 2+0 | 378 | 3.85323E-10 |
-| 2+1 | 3780 | 3.85323E-9 |
-| 2+2 | 15120 | 1.541292E-8 |
-| 2+3 | 30240 | 3.082584E-8 |
-| 2+4 | 30240 | 3.082584E-8 |
-| 2+5 | 12096 | 1.233033E-8 |
-| 3+0 | 5859 | 5.972506E-9 |
-| 3+1 | 47250 | 4.816537E-8 |
-| 3+2 | 143640 | 1.464227E-7 |
-| 3+3 | 196560 | 2.003679E-7 |
-| 3+4 | 105840 | 1.078904E-7 |
-| 3+5 | 6048 | 6.165167E-9 |
-| 4+0 | 72765 | 7.417467E-8 |
-| 4+1 | 446040 | 4.546811E-7 |
-| 4+2 | 929880 | 9.478945E-7 |
-| 4+3 | 695520 | 7.089942E-7 |
-| 4+4 | 75600 | 7.706459E-8 |
-| 5+0 | 686070 | 6.993612E-7 |
-| 5+1 | 2891700 | 2.947721E-6 |
-| 5+2 | 3333960 | 3.398548E-6 |
-| 5+3 | 589680 | 6.011038E-7 |
-| 6+0 | 4468527 | 4.555095E-6 |
-| 6+1 | 10542798 | 1.074704E-5 |
-| 6+2 | 3245508 | 3.308383E-6 |
-| 6+3 | 68040 | 6.935813E-8 |
-| 7+0 | 16528617 | 1.684882E-5 |
-| 7+1 | 11369484 | 1.158974E-5 |
-| 7+2 | 714420 | 7.282604E-7 |
-| 8+0 | 19292256 | 1.9666E-5 |
-| 8+1 | 3470040 | 3.537265E-6 |
-| 9+0 | 7302393 | 7.443862E-6 |
-| 9+1 | 153090 | 1.560558E-7 |
-| 10+0 | 688905 | 7.022511E-7 |
-
-A shorter version:
+#### Corner
 
 | Code Length | Count | Probability |
 | --- | --- | --- |
@@ -492,6 +497,8 @@ Expectation = 0.583333
 
 ### The distribution of the order of Rubik's cube group elements
 
+Given any move sequence, we will eventually return to the initial state if we repeat the sequence enough times. The number of times we need to repeat the sequence is the order of the group element (i.e. the target state by executing the sequence onto a solved cube). The following table shows the distribution of the order of the group elements.
+
 | Order | Count               |
 | ---   | ---                 |
 | 1     | 1                   |
@@ -604,7 +611,7 @@ Sum = 3246670537110000 = $24!/24^6$
 
 Mean = 20.0
 
-### Probability of edge buffer position in full parity (need explaination)
+### Probability of edge buffer position in full parity (will explain)
 
 No constraints on the parity:
 
@@ -646,7 +653,7 @@ Sum = 490497638400 = $2^{10}\times 12!$
 
 ## Notes
 
-+ Thanks to github copilot, without which a lazy boy like me may never write this readme.
++ *Grazie mille* to github copilot, without which a lazy boy like me may never write this readme.
 + Thank [Shuang Che](https://github.com/cs0x7f/min2phase) for the [min2phase algorithm](https://github.com/cs0x7f/min2phase) for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube. After years away from cubing, it seems that the [5x5x5 solver](https://github.com/cs0x7f/cube555) has come out, ~~but I will never ever write 5bf version of BLD-master, I hate it~~.
 
 ## License GPL-3.0

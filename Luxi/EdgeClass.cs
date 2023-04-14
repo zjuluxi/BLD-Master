@@ -67,7 +67,7 @@ namespace Luxi{
         }
 
 #region
-        public static readonly List<EdgeCC> oddList, evenList;
+        public static readonly List<EdgeCC> oddList, evenList, list;
         private static void _R(int index, int[] sizes, int[] colors, List<int> indexes)
         {
             if (index == sizes.Length)
@@ -107,6 +107,7 @@ namespace Luxi{
                 _R(0, s, new int[s.Length], temp);
                 temp.Clear();
             }
+            list = evenList.Concat(oddList).ToList();
         }
 #endregion
 
