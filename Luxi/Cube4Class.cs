@@ -7,8 +7,8 @@ namespace Luxi
     public class Cube4Class
     {
         public bool scrambleXCenter;
-        public Predicate<CornerCC> cornerLimit;
-        public Predicate<WingCC> wingLimit;
+        public Predicate<CornerCC> cornerConstranit;
+        public Predicate<WingCC> wingConstraint;
         
         private readonly double[] CornerCDF = new double[CornerCC.evenList.Count + CornerCC.oddList.Count],
             WingCDF = new double[WingCC.all.Count];
@@ -19,26 +19,26 @@ namespace Luxi
 
         public Cube4Class(){
             scrambleXCenter = true;
-            cornerLimit = cornerLimit => true;
-            wingLimit = wingLimit => true;
+            cornerConstranit = x => true;
+            wingConstraint = x => true;
         }
         public void Init()
         {
             int index = 0;
             CornerCount = 0;
             foreach (var x in CornerCC.all)
-                CornerCDF[index++] = (double)(CornerCount += cornerLimit(x) ? x.Count : 0) / (double)CornerCC.Sum;
+                CornerCDF[index++] = (double)(CornerCount += cornerConstranit(x) ? x.Count : 0) / (double)CornerCC.Sum;
             CornerProbability = CornerCDF[CornerCDF.Length - 1];
 
             WingCount = 0;
             for (index = 0; index < WingCDF.Length; ++index)
             {
-                if (wingLimit(WingCC.all[index]))
+                if (wingConstraint(WingCC.all[index]))
                 {
                     WingCDF[index] = (double)(WingCount += WingCC.all[index].Count) / (double)WingCC.Sum;
                 }
             }
-            WingProbability = WingCDF[WingCDF.Length - 1];
+            WingProbability = WingCDF[^1];
 
             XCenterCount = scrambleXCenter ? 1 : XCenterCC.Sum;
             XCenterProbability = (double)XCenterCount / XCenterCC.Sum;

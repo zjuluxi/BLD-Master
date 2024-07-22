@@ -6,9 +6,9 @@ namespace Luxi
 {
     class Cube3Class
     {
-        public Predicate<bool> parityLimit;
-        public Predicate<EdgeCC> edgeLimit;
-        public Predicate<CornerCC> cornerLimit;
+        public Predicate<bool> parityConstraint;
+        public Predicate<EdgeCC> edgeConstraint;
+        public Predicate<CornerCC> cornerConstraint;
         private readonly double[] evenEdgeCDF = new double[EdgeCC.evenList.Count], oddEdgeCDF = new double[EdgeCC.oddList.Count],
             evenCornerCDF = new double[CornerCC.evenList.Count], oddCornerCDF = new double[CornerCC.oddList.Count];
         public double evenEdgeProbability, oddEdgeProbability, evenCornerProbability, oddCornerProbability;
@@ -16,31 +16,31 @@ namespace Luxi
         public double meanParity, probability;
         
         public Cube3Class(){
-            parityLimit = x => true;
-            edgeLimit = x => true;
-            cornerLimit = x => true;
+            parityConstraint = x => true;
+            edgeConstraint = x => true;
+            cornerConstraint = x => true;
         }
         public void Init()
         {
             int index = 0;
             evenEdgeCount = 0;
             foreach (var x in EdgeCC.evenList)
-                evenEdgeCDF[index++] = (evenEdgeCount += parityLimit(false) && edgeLimit(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
+                evenEdgeCDF[index++] = (evenEdgeCount += parityConstraint(false) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
             evenEdgeProbability = evenEdgeCDF[evenEdgeCDF.Length - 1];
 
             oddEdgeCount = index = 0;
             foreach (var x in EdgeCC.oddList)
-                oddEdgeCDF[index++] = (oddEdgeCount += parityLimit(true) && edgeLimit(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
+                oddEdgeCDF[index++] = (oddEdgeCount += parityConstraint(true) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
             oddEdgeProbability = oddEdgeCDF[oddEdgeCDF.Length - 1];
 
             evenCornerCount = index = 0;
             foreach (var x in CornerCC.evenList)
-                evenCornerCDF[index++] = (evenCornerCount += parityLimit(false) && cornerLimit(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
+                evenCornerCDF[index++] = (evenCornerCount += parityConstraint(false) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
             evenCornerProbability = evenCornerCDF[evenCornerCDF.Length - 1];
 
             oddCornerCount = index = 0;
             foreach (var x in CornerCC.oddList)
-                oddCornerCDF[index++] = (oddCornerCount += parityLimit(true) && cornerLimit(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
+                oddCornerCDF[index++] = (oddCornerCount += parityConstraint(true) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
             oddCornerProbability = oddCornerCDF[oddCornerCDF.Length - 1];
 
             meanParity = oddEdgeProbability * oddCornerProbability / (evenEdgeProbability * evenCornerProbability + oddEdgeProbability * oddCornerProbability);

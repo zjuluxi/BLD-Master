@@ -18,6 +18,7 @@ At present the `XCenterCC` is not implemented and only support scrambled/unscram
 
 This program can generate scrambles with custom constraints for the conjugacy class, where the constraints are defined in `Cube3Class` and `Cube4Class`.
 A `Cube3Class` contains a `Predicate<EdgeCC>` for edge conjugacy class constraint, a `Predicate<CornerCC>` for corner conjugacy class constraint and a `Predicate<bool>` for parity constraint.
+Many examples are shown in `Program.cs`.
 An example for generating 10 3bf scrambles with edge code length 10 or 11 and corner code length 6 or 7 without flip or twist is:
 
 ```csharp
@@ -659,7 +660,7 @@ Sum = 490497638400 = $2^{10}\times 12!$
 ## License GPL-3.0
 
 ```
-Copyright (C) 2023 Xi Lu
+Copyright (C) 2019-2024 Xi Lu
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
