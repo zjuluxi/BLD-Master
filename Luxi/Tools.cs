@@ -6,29 +6,29 @@ namespace Luxi
     public static class Tools
     {
         public static readonly Random rd = new Random();
-        public static int FactI(int x) => x > 0 ? x * FactI(x - 1) : 1;
-        public static long FactI64(int x) => x > 0 ? x * FactI64(x - 1) : 1;
-        public static Int128 FactI128(int x) => x > 0 ? x * FactI128(x - 1) : 1;
-        public static int Pow(int x, int y){
-            int r = 1;
-            while (y > 0){
-                if ((y & 1) == 1)
-                    r *= x;
-                x *= x;
-                y >>= 1;
+        public static readonly int[] Pow3;
+        private static readonly int[] _FactI = new int[13];
+        private static readonly long[] _FactI64 = new long[21];
+        private static readonly Int128[] _FactI128 = new Int128[25];
+        static Tools(){
+            _FactI[0] = 1;
+            for (int i = 1; i < _FactI.Length; i++)
+                _FactI[i] = _FactI[i - 1] * i;
+            _FactI64[0] = 1;
+            for (int i = 1; i < _FactI64.Length; i++)
+                _FactI64[i] = _FactI64[i - 1] * i;
+            _FactI128[0] = 1;
+            for (int i = 1; i < _FactI128.Length; i++)
+                _FactI128[i] = _FactI128[i - 1] * i;
+            Pow3 = new int[9];
+            Pow3[0] = 1;
+            for (int i = 1; i < Pow3.Length; i++){
+                Pow3[i] = Pow3[i - 1] * 3;
             }
-            return r;
         }
-        public static long PowL(int x, int y){
-            long r = 1;
-            while (y > 0){
-                if ((y & 1) == 1)
-                    r *= x;
-                x *= x;
-                y >>= 1;
-            }
-            return r;
-        }
+        public static int FactI(int x) => _FactI[x];
+        public static long FactI64(int x) => _FactI64[x];
+        public static Int128 FactI128(int x) => _FactI128[x];
         public static bool GetNParity(int idx, int n)
         {
             int p = 0;

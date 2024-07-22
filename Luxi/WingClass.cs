@@ -56,13 +56,24 @@ namespace Luxi
 
 
         #region 
-        public static readonly List<WingCC> list;
+        public static readonly List<WingCC> all;
         public static readonly Int128 Sum = Int128.Parse("620448401733239439360000");
         static WingCC()
         {
-            list = new List<WingCC>();
-            foreach (int[] s in SizeGenerater(24))
-                list.Add(new WingCC(24 - s.Sum(), s.Clone() as int[]));
+            all = [];
+            if (File.Exists("Cache/w.txt")){
+                all.AddRange(File.ReadAllLines("Cache/w.txt").Select(x => x.Split(',')).Select(x => new WingCC(int.Parse(x[0]), x.Skip(1).Select(int.Parse).ToArray())));
+            }
+            else{
+                foreach (int[] s in SizeGenerater(24))
+                    all.Add(new WingCC(24 - s.Sum(), s.Clone() as int[]));
+                Directory.CreateDirectory("Cache");
+                File.WriteAllLines("Cache/w.txt",
+                    all.Select(x => string.Join(",", Enumerable.Concat(
+                        [x.FirstCycle],
+                        x.OtherCycles
+                    ))));
+            }
         }
         #endregion
     }

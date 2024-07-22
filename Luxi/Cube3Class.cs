@@ -15,6 +15,11 @@ namespace Luxi
         public long evenEdgeCount, oddEdgeCount, evenCornerCount, oddCornerCount;
         public double meanParity, probability;
         
+        public Cube3Class(){
+            parityLimit = x => true;
+            edgeLimit = x => true;
+            cornerLimit = x => true;
+        }
         public void Init()
         {
             int index = 0;
