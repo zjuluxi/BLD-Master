@@ -6,7 +6,7 @@ class Program
     static void Main(string[] args)
     {
         if (args.Length == 0){
-            Console.WriteLine("No argument is given. Please specify the constraint: dotnet run e/c/53/flip/parity/float3/xc/w.");
+            Console.WriteLine("No argument is given. Please specify the constraint: dotnet run e/c/53/flip/parity/float3/cyclist/xc/w.");
         }
         else if(args[0] is "xc" or "w"){
             Cube4Class cc = new();
@@ -51,6 +51,10 @@ class Program
             else if(args[0] == "float3"){ // Floating 3-cycle
                 cc.edgeConstraint   = x => x.OtherCycles.Contains((3,0));
                 cc.cornerConstraint = x => x.OtherCycles.Contains((3,0));
+            }
+            else if(args[0] == "cyclist"){ // King of cycling
+                cc.edgeConstraint = x => x.OtherCycleCount >= 2;
+                cc.cornerConstraint = x => x.OtherCycleCount >= 2;
             }
             cc.Init();
             // Console.WriteLine($"The probability of your choice is {cc.probability}.");

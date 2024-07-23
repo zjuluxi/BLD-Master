@@ -21,7 +21,7 @@ As an example, the first line in `ee.txt` (even edge), i.e. `11,1,1,1`, means th
 The other cache files are: `oe.txt` (odd edge), `ec.txt` (even corner), `oc.txt` (odd corner), `w.txt` (wing).
 
 This program can generate scrambles with custom constraints for the conjugacy class, where the constraints are defined in `Cube3Class` and `Cube4Class`.
-A `Cube3Class` contains a `Predicate<EdgeCC>` for edge conjugacy class constraint, a `Predicate<CornerCC>` for corner conjugacy class constraint and a `Predicate<bool>` for parity constraint.
+A `Cube3Class` contains a `Predicate<EdgeCC>` for edge conjugacy class constraint, a `Predicate<CornerCC>` for corner conjugacy class constraint and a `Predicate<int>` for parity constraint.
 Many examples are shown in `Program.cs`.
 An example for generating 10 3bf scrambles with edge code length 10 or 11 and corner code length 6 or 7 without flip or twist is:
 
@@ -656,10 +656,10 @@ Constrained on odd parity:
 
 Sum = 490497638400 = $2^{10}\times 12!$
 
-## Notes
+## Acknowledgements
 
-+ Many thanks to github copilot, without which a lazy boy like me may never write this readme.
-+ Thank [Chen Shuang](https://github.com/cs0x7f/min2phase) for the [min2phase algorithm](https://github.com/cs0x7f/min2phase) for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube.
++ Thank github copilot, without which a lazy boy like me may never write this readme.
++ Many thanks to [Chen Shuang](https://github.com/cs0x7f/min2phase) for the [min2phase](https://github.com/cs0x7f/min2phase) algorithm for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube, which I brutally modified to C# in this project.
 
 ## License GPL-3.0
 
