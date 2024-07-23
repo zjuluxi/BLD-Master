@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using CS.Min2Phase;
+﻿using CS.Min2Phase;
 using static Luxi.Move;
 using static Luxi.Tools;
 
@@ -12,16 +10,16 @@ namespace Luxi
         public Corner corner;
         private const string faces = "urfdlb";
         private readonly static Search search = new();
-        private static readonly Alg[] choice1 = { new Alg(), new Alg{Rw},
-            new Alg{Rw2}, new Alg{Rw_}, new Alg{Fw}, new Alg{Fw_} },
-            choice2 = { new Alg(), new Alg { Uw }, new Alg { Uw2 }, new Alg { Uw_ } },
-            suffix = { new Alg(), new Alg{D_}, new Alg{D2}, new Alg{D},
-                    new Alg{L_}, new Alg{B_, L_}, new Alg{B2, L_}, new Alg{B, L_},
-                    new Alg{L2}, new Alg{U_, L2}, new Alg{U2, L2}, new Alg{U, L2},
-                    new Alg{L}, new Alg{F_, L}, new Alg{F2, L}, new Alg{F, L},
-                    new Alg{B_}, new Alg{R_, B_}, new Alg{R2, B_}, new Alg{R, B_},
-                    new Alg{B}, new Alg{L_, B}, new Alg{L2, B}, new Alg{L, B}
-            };
+        private static readonly Alg[] choice1 = [ [], [Rw],
+            [Rw2], [Rw_], [Fw], [Fw_] ],
+            choice2 = [[], [Uw], [Uw2], [Uw_]],
+            suffix = [ [], [D_], [D2], [D],
+                    [L_], [B_, L_], [B2, L_], [B, L_],
+                    [L2], [U_, L2], [U2, L2], [U, L2],
+                    [L], [F_, L], [F2, L], [F, L],
+                    [B_], [R_, B_], [R2, B_], [R, B_],
+                    [B], [L_, B], [L2, B], [L, B]
+            ];
         
         public Cube3()
         {
@@ -30,7 +28,8 @@ namespace Luxi
         }
         public static Cube3 RandomCube3(bool edge=true, bool corner=true)
         {
-            Cube3 cube = new Cube3{
+            Cube3 cube = new()
+            {
                 edge = edge ? Edge.Random() : new Edge(),
                 corner = corner ? Corner.Random() : new Corner()
             };
@@ -113,23 +112,23 @@ namespace Luxi
         public string GetScramble() => search.Solution(ToString(), 21, 100000000, 0, 2);
         public string GetScramble(int bfOri)
         {
-            Cube3 t = new Cube3(){
+            Cube3 t = new(){
                 edge = edge.Copy(),
                 corner = corner.Copy()
             };
             t.Turn(suffix[bfOri]);
-            Alg s = new Alg(t.GetScramble());
+            Alg s = new(t.GetScramble());
             s.AddRange(choice1[bfOri / 4]);
             s.AddRange(choice2[bfOri % 4]);
             return s.ToString();
         }
         
         
-        private static readonly int[] EdgeIndex = {
+        private static readonly int[] EdgeIndex = [
             7, 19, 3, 37, 1, 46, 5, 10, 28, 25, 30, 43, 34, 52, 32, 16, 23, 12, 21, 41, 50, 39, 48, 14
-        }, CornerIndex = {
+        ], CornerIndex = [
             6, 18, 38, 0, 36, 47, 2, 45, 11, 8, 9, 20, 27, 44, 24, 33, 53, 42, 35, 17, 51, 29, 26, 15
-        };
+        ];
 
         public override string ToString()
         {

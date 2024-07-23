@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using static Luxi.Move;
+﻿using static Luxi.Move;
 using static Luxi.Tools;
 
 namespace Luxi
@@ -12,15 +8,15 @@ namespace Luxi
         public State[] state;
 
         public Corner() => state = Enumerable.Range(0, 8).Select(i => new State{ perm = i, ori = 0 }).ToArray();
-        public State this[int perm, int ori] => new State { perm = state[perm].perm, ori = state[perm].ori ^ ori };
+        public State this[int perm, int ori] => new() { perm = state[perm].perm, ori = state[perm].ori ^ ori };
         public static Corner Random()
         {
-            int cpVal = Tools.rd.Next(40320), coVal = Tools.rd.Next(2187);
-            Tools.SetNPerm(cpVal, 8, out int[] ep);
-            Tools.SetNTwist(coVal, 8, out int[] eo);
+            int cpVal = rd.Next(40320), coVal = rd.Next(2187);
+            SetNPerm(cpVal, 8, out int[] ep);
+            SetNTwist(coVal, 8, out int[] eo);
             return new Corner { state = ep.Zip(eo, (p, o) => new State{ perm = p, ori = o }).ToArray() };
         }
-        public Corner Copy() => new Corner { state = state.ToArray() };
+        public Corner Copy() => new() { state = state.ToArray() };
         public void Solve(){
             for (int i = 0; i < 8; i++){
                 state[i].perm = i;

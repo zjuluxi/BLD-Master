@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading;
+﻿
 using Luxi;
 
 class Program
@@ -9,7 +6,7 @@ class Program
     static void Main(string[] args)
     {
         if (args.Length == 0){
-            Console.WriteLine("No argument is given. Please specify the constraint: e/c/53/ft/fp/f3/xc/w.");
+            Console.WriteLine("No argument is given. Please specify the constraint: dotnet run e/c/53/flip/parity/float3/xc/w.");
         }
         else if(args[0] is "xc" or "w"){
             Cube4Class cc = new();
@@ -42,16 +39,16 @@ class Program
                 cc.edgeConstraint = x => x.CodeLength == 10;
                 cc.cornerConstraint = x => x.CodeLength == 6;
             }
-            else if(args[0] == "ft"){ // Happy flipping and twisting!
+            else if(args[0] == "flip"){ // Happy flipping and twisting!
                 cc.edgeConstraint = x => x.FlipCount >= 2;
                 cc.cornerConstraint = x => x.TwistCount >= 2;
             }
-            else if(args[0] == "fp"){ // Focus on Parity
-                cc.parityConstraint = x => x;
+            else if(args[0] == "parity"){ // Focus on full parity?
+                cc.parityConstraint = x => x == 1;
                 cc.edgeConstraint = x => x.OtherCycleCount == 0 && x.FlipCount == 0;
                 cc.cornerConstraint = x => x.OtherCycleCount == 0 && x.TwistCount == 0;
             }
-            else if(args[0] == "f3"){ // Floating 3-cycle
+            else if(args[0] == "float3"){ // Floating 3-cycle
                 cc.edgeConstraint   = x => x.OtherCycles.Contains((3,0));
                 cc.cornerConstraint = x => x.OtherCycles.Contains((3,0));
             }

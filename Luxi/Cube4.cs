@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CS.ThreePhase;
+﻿using CS.ThreePhase;
 using static Luxi.Move;
 using static Luxi.Tools;
 
@@ -7,9 +6,9 @@ namespace Luxi
 {
     public class Cube4
     {
-        public Wing wing = new Wing();
-        public Corner corner = new Corner();
-        public XCenter xcenter = new XCenter();
+        public Wing wing = new();
+        public Corner corner = new();
+        public XCenter xcenter = new();
         private static readonly Search search = new();
 
         public Cube4()
@@ -21,7 +20,8 @@ namespace Luxi
 
         public static Cube4 RandomCube4(bool corner=true, bool wing=true, bool xcenter=true)
         {
-            Cube4 cube = new Cube4{
+            Cube4 cube = new()
+            {
                 corner = corner ? Corner.Random() : new Corner(),
                 wing = wing ? Wing.Random() : new Wing(),
                 xcenter = xcenter ? XCenter.Random() : new XCenter()
@@ -133,15 +133,15 @@ namespace Luxi
         public string GetScramble() => search.Solution(ToString());
 
         
-        private static readonly int[] WingIndex = new int[] {
+        private static readonly int[] WingIndex = [
             14, 34, 33, 13, 8, 66, 65, 4, 1, 82, 81, 2,
             7, 18, 17, 11, 49, 45, 46, 50, 56, 77, 78, 52,
             62, 93, 94, 61, 55, 29, 30, 59, 39, 20, 24, 43,
             40, 75, 71, 36, 87, 68, 72, 91, 88, 27, 23, 84 
-        }, CornerIndex = new int[] { 12, 32, 67, 0, 64, 83, 3, 80, 19, 15, 16, 35,
+        ], CornerIndex = [ 12, 32, 67, 0, 64, 83, 3, 80, 19, 15, 16, 35,
             48, 79, 44, 60, 95, 76, 63, 31, 92, 51, 47, 28 
-        }, XCenterIndex = new int[] { 10, 9, 5, 6, 21, 22, 26, 25, 37, 38, 42, 41,
-            53, 54, 58, 57, 69, 70, 74, 73, 85, 86, 90, 89 };
+        ], XCenterIndex = [ 10, 9, 5, 6, 21, 22, 26, 25, 37, 38, 42, 41,
+            53, 54, 58, 57, 69, 70, 74, 73, 85, 86, 90, 89 ];
         public const string faces = "urfdlb";
         public override string ToString()
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using static Luxi.Move;
-using static Luxi.Tools;
+﻿using static Luxi.Move;
 
 namespace Luxi
 {

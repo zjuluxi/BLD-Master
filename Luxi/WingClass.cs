@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using static Luxi.Tools;
 
 namespace Luxi
@@ -18,11 +16,11 @@ namespace Luxi
             CodeLength = OtherCycles.Sum(x => x > 1 ? x + 1 : 0) + FirstCycle - 1;
             Parity = CodeLength & 1;
             OtherCycleAmount = OtherCycles.Count(x => x != 1);
-            Count = FactI128(Perm - 1);
+            Count = FactI128[Perm - 1];
             foreach (var i in OtherCycles)
                 Count /= i;
             foreach (var i in OtherCycles.GroupBy(x => x))
-                Count /= FactI128(i.Count());
+                Count /= FactI128[i.Count()];
         }
         public Wing GetInstance(int Buffer=0)
         {

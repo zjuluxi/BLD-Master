@@ -1,16 +1,14 @@
-﻿using System;
-using System.Numerics;
-using static Luxi.Tools;
+﻿using static Luxi.Tools;
 
 namespace Luxi
 {
     class Cube3Class
     {
-        public Predicate<bool> parityConstraint;
+        public Predicate<int> parityConstraint;
         public Predicate<EdgeCC> edgeConstraint;
         public Predicate<CornerCC> cornerConstraint;
-        private readonly double[] evenEdgeCDF = new double[EdgeCC.evenList.Count], oddEdgeCDF = new double[EdgeCC.oddList.Count],
-            evenCornerCDF = new double[CornerCC.evenList.Count], oddCornerCDF = new double[CornerCC.oddList.Count];
+        private readonly double[] evenEdgeCDF = new double[EdgeCC.EvenList.Count], oddEdgeCDF = new double[EdgeCC.OddList.Count],
+            evenCornerCDF = new double[CornerCC.EvenList.Count], oddCornerCDF = new double[CornerCC.OddList.Count];
         public double evenEdgeProbability, oddEdgeProbability, evenCornerProbability, oddCornerProbability;
         public long evenEdgeCount, oddEdgeCount, evenCornerCount, oddCornerCount;
         public double meanParity, probability;
@@ -24,23 +22,23 @@ namespace Luxi
         {
             int index = 0;
             evenEdgeCount = 0;
-            foreach (var x in EdgeCC.evenList)
-                evenEdgeCDF[index++] = (evenEdgeCount += parityConstraint(false) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
+            foreach (var x in EdgeCC.EvenList)
+                evenEdgeCDF[index++] = (evenEdgeCount += parityConstraint(0) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
             evenEdgeProbability = evenEdgeCDF[evenEdgeCDF.Length - 1];
 
             oddEdgeCount = index = 0;
-            foreach (var x in EdgeCC.oddList)
-                oddEdgeCDF[index++] = (oddEdgeCount += parityConstraint(true) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
+            foreach (var x in EdgeCC.OddList)
+                oddEdgeCDF[index++] = (oddEdgeCount += parityConstraint(1) && edgeConstraint(x) ? x.Count : 0) * 2.0 / EdgeCC.Sum;
             oddEdgeProbability = oddEdgeCDF[oddEdgeCDF.Length - 1];
 
             evenCornerCount = index = 0;
-            foreach (var x in CornerCC.evenList)
-                evenCornerCDF[index++] = (evenCornerCount += parityConstraint(false) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
+            foreach (var x in CornerCC.EvenList)
+                evenCornerCDF[index++] = (evenCornerCount += parityConstraint(0) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
             evenCornerProbability = evenCornerCDF[evenCornerCDF.Length - 1];
 
             oddCornerCount = index = 0;
-            foreach (var x in CornerCC.oddList)
-                oddCornerCDF[index++] = (oddCornerCount += parityConstraint(true) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
+            foreach (var x in CornerCC.OddList)
+                oddCornerCDF[index++] = (oddCornerCount += parityConstraint(1) && cornerConstraint(x) ? x.Count : 0) * 2.0 / CornerCC.Sum;
             oddCornerProbability = oddCornerCDF[oddCornerCDF.Length - 1];
 
             meanParity = oddEdgeProbability * oddCornerProbability / (evenEdgeProbability * evenCornerProbability + oddEdgeProbability * oddCornerProbability);
@@ -55,16 +53,16 @@ namespace Luxi
             {
                 double a = rd.NextDouble() * oddEdgeProbability, b = rd.NextDouble() * oddCornerProbability;
                 return new Cube3{
-                    edge = EdgeCC.oddList[Array.FindIndex(oddEdgeCDF, x => x > a)].GetInstance(),
-                    corner = CornerCC.oddList[Array.FindIndex(oddCornerCDF, x => x > b)].GetInstance()
+                    edge = EdgeCC.OddList[Array.FindIndex(oddEdgeCDF, x => x > a)].GetInstance(),
+                    corner = CornerCC.OddList[Array.FindIndex(oddCornerCDF, x => x > b)].GetInstance()
                 };
             }
             else
             {
                 double a = rd.NextDouble() * evenEdgeProbability, b = rd.NextDouble() * evenCornerProbability;
                 return new Cube3{
-                    edge = EdgeCC.evenList[Array.FindIndex(evenEdgeCDF, x => x > a)].GetInstance(),
-                    corner = CornerCC.evenList[Array.FindIndex(evenCornerCDF, x => x > b)].GetInstance()
+                    edge = EdgeCC.EvenList[Array.FindIndex(evenEdgeCDF, x => x > a)].GetInstance(),
+                    corner = CornerCC.EvenList[Array.FindIndex(evenCornerCDF, x => x > b)].GetInstance()
                 };
             }
         }

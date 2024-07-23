@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using static Luxi.Tools;
 
 namespace Luxi
@@ -10,7 +8,7 @@ namespace Luxi
         public Predicate<CornerCC> cornerConstranit;
         public Predicate<WingCC> wingConstraint;
         
-        private readonly double[] CornerCDF = new double[CornerCC.evenList.Count + CornerCC.oddList.Count],
+        private readonly double[] CornerCDF = new double[CornerCC.EvenList.Count + CornerCC.OddList.Count],
             WingCDF = new double[WingCC.all.Count];
         public long CornerCount, XCenterCount;
         public Int128 WingCount;
@@ -26,7 +24,7 @@ namespace Luxi
         {
             int index = 0;
             CornerCount = 0;
-            foreach (var x in CornerCC.all)
+            foreach (var x in CornerCC.AllList)
                 CornerCDF[index++] = (double)(CornerCount += cornerConstranit(x) ? x.Count : 0) / (double)CornerCC.Sum;
             CornerProbability = CornerCDF[CornerCDF.Length - 1];
 
@@ -50,7 +48,7 @@ namespace Luxi
         {
             double a = rd.NextDouble() * CornerProbability, b = rd.NextDouble() * WingProbability;
             return new Cube4{
-                corner = CornerCC.all[Array.FindIndex(CornerCDF, x => x > a)].GetInstance(),
+                corner = CornerCC.AllList[Array.FindIndex(CornerCDF, x => x > a)].GetInstance(),
                 wing = WingCC.all[Array.FindIndex(WingCDF, x => x > b)].GetInstance(),
                 xcenter = XCenterCC.GetInstance(scrambleXCenter)
             };

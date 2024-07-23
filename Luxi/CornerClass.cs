@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using static Luxi.Tools;
 
-namespace Luxi{
+namespace Luxi
+{
     public class CornerCC {
         public readonly State FirstCycle;
         public readonly State[] OtherCycles;
@@ -19,12 +17,12 @@ namespace Luxi{
             OtherCycleCount = OtherCycles.Count(x => x.perm != 1);
             Parity = CodeLength & 1;
             TwistCount = OtherCycles.Count(x => x.perm == 1 && x.ori > 0);
-            Count = FactI(_Perm - 1);
+            Count = FactI[_Perm - 1];
             foreach (var i in OtherCycles)
                 Count /= i.perm;
             Count *= Pow3[_Perm - 1 - OtherCycles.Length];
             foreach (var i in OtherCycles.GroupBy(x => x))
-                Count /= FactI(i.Count());
+                Count /= FactI[i.Count()];
         }
         public Corner GetInstance(int Buffer=9)
         {
@@ -66,8 +64,8 @@ namespace Luxi{
         
 
 #region 
-        public static readonly List<CornerCC> oddList, evenList, all;
-        private static void _R(int index, int[] sizes, int[] colors, List<int> indexes)
+        public static readonly List<CornerCC> OddList, EvenList, AllList;
+        private static void GenerateOri(int index, int[] sizes, int[] colors, List<int> indexes)
         {
             if (index == sizes.Length)
             {
@@ -75,7 +73,7 @@ namespace Luxi{
                 for (int i = 0; i < index; i++)
                     OtherCycles[i] = (sizes[i], colors[i]);
                 var t = new CornerCC(8 - sizes.Sum(), OtherCycles);
-                (t.Parity == 1 ? oddList : evenList).Add(t);
+                (t.Parity == 1 ? OddList : EvenList).Add(t);
             }
             else
             {
@@ -83,14 +81,14 @@ namespace Luxi{
                 for (int i = j >= 0 ? 2 : colors[index - 1]; i >= 0; i--)
                 {
                     colors[index] = i;
-                    _R(index + 1, sizes, colors, indexes);
+                    GenerateOri(index + 1, sizes, colors, indexes);
                 }
             }
         }
         static CornerCC()
         {
-            oddList = new List<CornerCC>();
-            evenList = new List<CornerCC>();
+            OddList = [];
+            EvenList = [];
             if (File.Exists("Cache/oc.txt") && File.Exists("Cache/ec.txt")){
                 foreach (var s in File.ReadAllLines("Cache/oc.txt"))
                 {
@@ -98,7 +96,7 @@ namespace Luxi{
                     State[] OtherCycles = new State[(t.Length - 2) / 2];
                     for (int i = 0; i < OtherCycles.Length; i++)
                         OtherCycles[i] = (t[i * 2 + 2], t[i * 2 + 3]);
-                    oddList.Add(new CornerCC(t[0], OtherCycles));
+                    OddList.Add(new CornerCC(t[0], OtherCycles));
                 }
                 foreach (var s in File.ReadAllLines("Cache/ec.txt"))
                 {
@@ -106,11 +104,11 @@ namespace Luxi{
                     State[] OtherCycles = new State[(t.Length - 2) / 2];
                     for (int i = 0; i < OtherCycles.Length; i++)
                         OtherCycles[i] = (t[i * 2 + 2], t[i * 2 + 3]);
-                    evenList.Add(new CornerCC(t[0], OtherCycles));
+                    EvenList.Add(new CornerCC(t[0], OtherCycles));
                 }
             }
             else{
-                List<int> temp = new List<int>();
+                List<int> temp = [];
                 foreach (var s in SizeGenerater(8))
                 {
                     int p = 0;
@@ -122,22 +120,22 @@ namespace Luxi{
                             temp.Add(i);
                         }
                     }
-                    _R(0, s, new int[s.Length], temp);
+                    GenerateOri(0, s, new int[s.Length], temp);
                     temp.Clear();
                 }
                 Directory.CreateDirectory("Cache");
                 File.WriteAllLines("Cache/oc.txt",
-                    oddList.Select(x => string.Join(",", Enumerable.Concat(
+                    OddList.Select(x => string.Join(",", Enumerable.Concat(
                         [x.FirstCycle.perm, x.FirstCycle.ori],
                         x.OtherCycles.SelectMany(y => new int[] { y.perm, y.ori })))
                 ));
                 File.WriteAllLines("Cache/ec.txt",
-                    evenList.Select(x => string.Join(",", Enumerable.Concat(
+                    EvenList.Select(x => string.Join(",", Enumerable.Concat(
                         [x.FirstCycle.perm, x.FirstCycle.ori],
                         x.OtherCycles.SelectMany(y => new int[] { y.perm, y.ori })))
                 ));
             }
-            all = oddList.Concat(evenList).ToList();
+            AllList = OddList.Concat(EvenList).ToList();
         }
 #endregion
 

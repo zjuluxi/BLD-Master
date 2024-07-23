@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Linq;
-using System.Text;
-using static Luxi.Move;
+﻿using static Luxi.Move;
 using static Luxi.Tools;
 
 namespace Luxi
@@ -43,7 +38,7 @@ namespace Luxi
             int[] arr = new int[24];
             for (int i = 22; i >= 0; i--)
             {
-                arr[i] = Tools.rd.Next(24 - i);
+                arr[i] = rd.Next(24 - i);
                 for (int j = i + 1; j < 24; j++)
                 {
                     if (arr[j] >= arr[i])

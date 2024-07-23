@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace Luxi
+﻿namespace Luxi
 {
     public class Alg : List<Move>
     {
         public Alg() { }
         public Alg(string s)
         {
-            Queue<int> q3 = new Queue<int>(), q4 = new Queue<int>();
+            Queue<int> q3 = new(), q4 = new();
             foreach (char c in s)
                 switch (c)
                 {

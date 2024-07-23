@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using static Luxi.Move;
+﻿using static Luxi.Move;
 using static Luxi.Tools;
 
 namespace Luxi
@@ -12,15 +8,15 @@ namespace Luxi
         public State[] state;
 
         public Edge() => state = Enumerable.Range(0, 12).Select(i => new State{ perm = i, ori = 0 }).ToArray();
-        public State this[int perm, int ori] => new State { perm = state[perm].perm, ori = state[perm].ori ^ ori };
+        public State this[int perm, int ori] => new() { perm = state[perm].perm, ori = state[perm].ori ^ ori };
         public static Edge Random()
         {
-            int epVal = Tools.rd.Next(479001600), eoVal = Tools.rd.Next(2048);
-            Tools.SetNPerm(epVal, 12, out int[] ep);
-            Tools.SetNFlip(eoVal, 12, out int[] eo);
+            int epVal = rd.Next(479001600), eoVal = rd.Next(2048);
+            SetNPerm(epVal, 12, out int[] ep);
+            SetNFlip(eoVal, 12, out int[] eo);
             return new Edge { state = ep.Zip(eo, (p, o) => new State{ perm = p, ori = o }).ToArray() };
         }
-        public Edge Copy() => new Edge { state = state.ToArray() };
+        public Edge Copy() => new() { state = state.ToArray() };
         public void Solve(){
             for (int i = 0; i < 12; i++){
                 state[i].perm = i;

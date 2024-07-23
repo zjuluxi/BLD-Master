@@ -16,6 +16,10 @@ The code length is defined as `OtherCycles.Sum(x => x.perm > 1 ? x.perm + 1 : x.
 The related classes are called `EdgeCC`, `CornerCC`, `WingCC` and `XCenterCC` respectively.
 At present the `XCenterCC` is not implemented and only support scrambled/unscrambled.
 
+All possible classes are stored in the text files in the `Cache` folder, in the format `firstCycleLength, firstCycleOri, secondCycleLength, secondCycleOri, ...`.
+As an example, the first line in `ee.txt` (even edge), i.e. `11,1,1,1`, means the cycle containing buffer is a 11-cycle with ori sum being 1, and the remain edge is flipped.
+The other cache files are: `oe.txt` (odd edge), `ec.txt` (even corner), `oc.txt` (odd corner), `w.txt` (wing).
+
 This program can generate scrambles with custom constraints for the conjugacy class, where the constraints are defined in `Cube3Class` and `Cube4Class`.
 A `Cube3Class` contains a `Predicate<EdgeCC>` for edge conjugacy class constraint, a `Predicate<CornerCC>` for corner conjugacy class constraint and a `Predicate<bool>` for parity constraint.
 Many examples are shown in `Program.cs`.
@@ -654,8 +658,8 @@ Sum = 490497638400 = $2^{10}\times 12!$
 
 ## Notes
 
-+ *Grazie mille* to github copilot, without which a lazy boy like me may never write this readme.
-+ Thank [Shuang Che](https://github.com/cs0x7f/min2phase) for the [min2phase algorithm](https://github.com/cs0x7f/min2phase) for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube. After years away from cubing, it seems that the [5x5x5 solver](https://github.com/cs0x7f/cube555) has come out, ~~but I will never ever write 5bf version of BLD-master, I hate it~~.
++ Many thanks to github copilot, without which a lazy boy like me may never write this readme.
++ Thank [Chen Shuang](https://github.com/cs0x7f/min2phase) for the [min2phase algorithm](https://github.com/cs0x7f/min2phase) for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube.
 
 ## License GPL-3.0
 
