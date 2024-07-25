@@ -26,16 +26,19 @@ namespace Luxi
             edge = new Edge();
             corner = new Corner();
         }
-        public static Cube3 RandomCube3(bool edge=true, bool corner=true)
+        public static Cube3 RandomCube3(bool scrambleEdge=true, bool scrambleCorner=true)
         {
             Cube3 cube = new()
             {
-                edge = edge ? Edge.Random() : new Edge(),
-                corner = corner ? Corner.Random() : new Corner()
+                edge = scrambleEdge ? Edge.Random() : new Edge(),
+                corner = scrambleCorner ? Corner.Random() : new Corner()
             };
-            // Random parity
-            if (edge && corner && rd.Next(2) == 0)
-                cube.Turn(U);
+            if(cube.edge.GetParity() != cube.corner.GetParity()){
+                if (scrambleEdge)
+                    cube.edge.Swap(0, 1);
+                else
+                    cube.corner.Swap(0, 1);
+            }
             return cube;
         }
         public void Turn(IEnumerable<Move> s)
@@ -152,5 +155,16 @@ namespace Luxi
             }
             return new string(state);
         }
+
+        public void Cycle(string code){
+            edge.Cycle(code);
+            corner.Cycle(code);
+        }
+        public void CycleInv(string code){
+            char[] charArray = code.ToCharArray();
+            Array.Reverse(charArray);
+            Cycle(new string(charArray));
+        }
+        public string ReadCode() => edge.ReadCode() + corner.ReadCode();
     }
 }

@@ -22,7 +22,7 @@
                 Pow3[i] = Pow3[i - 1] * 3;
             }
         }
-        public static bool GetNParity(int idx, int n)
+        public static int GetNParity(int idx, int n)
         {
             int p = 0;
             for (int i = n - 2; i >= 0; i--)
@@ -30,56 +30,37 @@
                 p ^= idx % (n - i);
                 idx /= n - i;
             }
-            return (p & 1) == 1;
+            return p & 1;
         }
-        public static void SetNPerm(int idx, int n, out int[] arr)
+        public static int[] RandomPermutation(int n)
         {
-            arr = new int[n];
-            arr[n - 1] = 0;
-            for (int i = n - 2; i >= 0; i--)
+            int[] perm = Enumerable.Range(0, n).ToArray();
+            for (int i = 0; i < n - 1; i++)
             {
-                arr[i] = idx % (n - i);
-                idx /= n - i;
-                for (int j = i + 1; j < n; j++)
-                {
-                    if (arr[j] >= arr[i])
-                        arr[j]++;
-                }
+                int j = i + rd.Next(n - i);
+                (perm[i], perm[j]) = (perm[j], perm[i]);
             }
+            return perm;
         }
-        public static int GetNPerm(int[] arr, int n)
+        public static int[] RandomOrientation(int n, int numOri)
         {
-            int idx = 0;
-            for (int i = 0; i < n; i++)
-            {
-                idx *= n - i;
-                for (int j = i + 1; j < n; j++)
-                {
-                    if (arr[j] < arr[i])
-                    {
-                        idx++;
-                    }
-                }
-            }
-            return idx;
+            int[] ori = new int[n];
+            int sumOri = 0;
+            for (int i = 0; i < n - 1; i++)
+                sumOri += ori[i] = rd.Next(numOri);
+            ori[n - 1] = (numOri - sumOri % numOri) % numOri;
+            return ori;
         }
-        public static void SetNFlip(int val, int n, out int[] arr)
+        public static int GetParity(int[] arr)
         {
-            arr = new int[n];
-            int color = 0;
-            for (int i = 0; i < n - 1; i++, val >>= 1)
-                color += arr[i] = val & 1;
-            arr[n - 1] = color & 1;
+            int parity = 0;
+            for (int i = 0; i < arr.Length - 1; i++)
+                for (int j = i + 1; j < arr.Length; j++)
+                    if (arr[i] > arr[j])
+                        parity ^= 1;
+            return parity;
         }
-        public static void SetNTwist(int val, int n, out int[] arr)
-        {
-            arr = new int[n];
-            int color = 0;
-            for (int i = 0; i < n - 1; i++, val /= 3)
-                color += arr[i] = val % 3;
-            arr[n - 1] = (24 - color) % 3;
-        }
-        public static IEnumerable<int[]> SizeGenerater(int Perm)
+        public static IEnumerable<int[]> GeneratePerm(int Perm)
         {
             for (int size = 0, i, j; size < Perm; ++size)
             {

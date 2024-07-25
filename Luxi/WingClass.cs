@@ -63,7 +63,7 @@ namespace Luxi
                 all.AddRange(File.ReadAllLines("Cache/w.txt").Select(x => x.Split(',')).Select(x => new WingCC(int.Parse(x[0]), x.Skip(1).Select(int.Parse).ToArray())));
             }
             else{
-                foreach (int[] s in SizeGenerater(24))
+                foreach (int[] s in GeneratePerm(24))
                     all.Add(new WingCC(24 - s.Sum(), s.Clone() as int[]));
                 Directory.CreateDirectory("Cache");
                 File.WriteAllLines("Cache/w.txt",

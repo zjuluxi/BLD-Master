@@ -29,37 +29,36 @@ namespace Luxi
         public Edge GetInstance(int Buffer=0)
         {
             State[] instance = new State[_Perm];
-            int head, remain = FirstCycle.perm, current, i = 0, color = 0;
-            SetNPerm(rd.Next(479001600), 12, out int[] order);
-            SetNFlip(rd.Next(2048), 12, out int[] colors);
+            int head, remain = FirstCycle.perm, current, i = 0, o = 0;
+            int[] perm = RandomPermutation(_Perm), ori = RandomOrientation(_Perm, _Ori);
             current = head = Buffer >> 1;
-            order[Array.IndexOf(order, head)] = order[0];
-            order[0] = head;
+            perm[Array.IndexOf(perm, head)] = perm[0];
+            perm[0] = head;
             while ((--remain) > 0)
             {
                 i++;
-                instance[current].perm = order[i];
-                instance[current].ori = colors[i];
-                current = order[i];
-                color += colors[i];
+                instance[current].perm = perm[i];
+                instance[current].ori = ori[i];
+                current = perm[i];
+                o += ori[i];
             }
             instance[current].perm = head;
-            instance[current].ori = (FirstCycle.ori + 24 - color) % _Ori;
+            instance[current].ori = (FirstCycle.ori + 24 - o) % _Ori;
             foreach (var cycle in OtherCycles)
             {
-                color = 0;
+                o = 0;
                 remain = cycle.perm;
-                current = head = order[++i];
+                current = head = perm[++i];
                 while ((--remain) > 0)
                 {
                     i++;
-                    instance[current].perm = order[i];
-                    instance[current].ori = colors[i];
-                    current = order[i];
-                    color += colors[i];
+                    instance[current].perm = perm[i];
+                    instance[current].ori = ori[i];
+                    current = perm[i];
+                    o += ori[i];
                 }
                 instance[current].perm = head;
-                instance[current].ori = (cycle.ori + 24 - color) % _Ori;
+                instance[current].ori = (cycle.ori + 24 - o) % _Ori;
             }
             return new Edge { state = instance };
         }
@@ -112,7 +111,7 @@ namespace Luxi
             }
             else{
                 List<int> temp = [];
-                foreach (var s in SizeGenerater(12))
+                foreach (var s in GeneratePerm(12))
                 {
                     int p = 0;
                     for (int i = 0; i < s.Length; i++)

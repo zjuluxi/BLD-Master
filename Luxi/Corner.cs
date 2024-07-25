@@ -8,15 +8,17 @@ namespace Luxi
         public State[] state;
 
         public Corner() => state = Enumerable.Range(0, 8).Select(i => new State{ perm = i, ori = 0 }).ToArray();
-        public State this[int perm, int ori] => new() { perm = state[perm].perm, ori = state[perm].ori ^ ori };
+        public State this[int perm, int ori] => new() { perm = state[perm].perm, ori = (state[perm].ori + ori) % 3 };
+        public State this[State s] => new() { perm = state[s.perm].perm, ori = (state[s.perm].ori + s.ori) % 3 };
         public static Corner Random()
         {
-            int cpVal = rd.Next(40320), coVal = rd.Next(2187);
-            SetNPerm(cpVal, 8, out int[] ep);
-            SetNTwist(coVal, 8, out int[] eo);
-            return new Corner { state = ep.Zip(eo, (p, o) => new State{ perm = p, ori = o }).ToArray() };
+            int[] perm = RandomPermutation(8), ori = RandomOrientation(8, 3);
+            return new Corner { state = Enumerable.Range(0, 8).Select(i => new State { perm = perm[i], ori = ori[i] }).ToArray() };
         }
-        public Corner Copy() => new() { state = state.ToArray() };
+        public Corner Copy() => new() { state = [.. state] };
+        public int GetParity(){
+            return Tools.GetParity(state.Select(s => s.perm).ToArray());
+        }
         public void Solve(){
             for (int i = 0; i < 8; i++){
                 state[i].perm = i;
@@ -31,7 +33,7 @@ namespace Luxi
             return true;
         }
         
-        private void Cycle4(int p0, int p1, int p2, int p3, int o)
+        public void Cycle4(int p0, int p1, int p2, int p3, int o)
         {
             int t = state[p0].perm;
             state[p0].perm = state[p3].perm;
@@ -45,13 +47,10 @@ namespace Luxi
             state[p2].ori = (state[p1].ori + o) % 3;
             state[p1].ori = (t + 3 - o) % 3;
         }
-        private void Swap(int p0, int p1, int o = 0)
+        public void Swap(int p0, int p1, int o = 0)
         {
-            int t = state[p0].perm;
-            state[p0].perm = state[p1].perm;
-            state[p1].perm = t;
-
-            t = state[p0].ori;
+            (state[p1].perm, state[p0].perm) = (state[p0].perm, state[p1].perm);
+            int t = state[p0].ori;
             state[p0].ori = (state[p1].ori + o) % 3;
             state[p1].ori = (t + 3 - o) % 3;
         }
@@ -88,6 +87,45 @@ namespace Luxi
                 case z_: Turn(F_); Turn(B); Turn(S_); break;
                 default: break;
             }
+        }
+
+        public const string Code = "defghijklabcwmnopqrstxyz";
+        public void Cycle(string code, int Buffer=3){
+            foreach (char c in code)
+            {
+                int idx = Code.IndexOf(c);
+                if (idx >= 0 && idx / 3 != Buffer){
+                    Swap(Buffer, idx / 3, idx % 3);
+                }
+            }
+        }
+        public string ReadCode(int Buffer=3){
+            System.Text.StringBuilder sb = new();
+            int flag = 0xff;
+            flag &= ~(1 << Buffer);
+            for (int i = 0; i < 8; i++)
+                if (state[i].perm == i && state[i].ori == 0)
+                    flag &= ~(1 << i);
+            State head = (Buffer, 0);
+            while(true){
+                var next = this[head];
+                while (next.perm != head.perm){
+                    sb.Append(Code[next.perm * 3 + next.ori]);
+                    flag &= ~(1 << next.perm);
+                    next = this[next];
+                }
+                if (next.perm != Buffer)
+                    sb.Append(Code[next.perm * 3 + next.ori]);
+                if(flag == 0)
+                    break;
+                head.perm = 0;
+                head.ori = next.ori;
+                while(((flag >> head.perm) & 1) == 0)
+                    ++head.perm;
+                flag &= ~(1 << head.perm);
+                sb.Append(Code[head.perm * 3 + head.ori]);
+            }
+            return sb.ToString();
         }
     }
 }

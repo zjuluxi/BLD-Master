@@ -1,4 +1,6 @@
-﻿namespace Luxi
+﻿using System.Text;
+
+namespace Luxi
 {
     public class Alg : List<Move>
     {
@@ -43,6 +45,36 @@
             foreach (var i in q4)
                 if (i < Count && ((int)this[i]) % 18 / 3 == 2)
                     this[i] = (Move)((int)this[i] + 6);
+        }
+        // Operator +
+        public static Alg operator +(Alg a, Alg b) => [.. a, .. b];
+        public static Alg Parse(string s){
+            if (s.Contains(':')) {
+                int colonIdx = s.IndexOf(':');
+                var pre = Parse(s[..colonIdx]);
+                var core = Parse(s[(colonIdx+1)..]);
+                return pre + core + pre.Reverse();
+            }
+            else if (s.Contains('[')) { // No support of stack
+                int commaIdx = s.IndexOf(',');
+                var a = Parse(s[(s.IndexOf('[')+1)..commaIdx]);
+                var b = Parse(s[(commaIdx+1)..s.LastIndexOf(']')]);
+                return a + b + a.Reverse() + b.Reverse();
+            }
+            else if (s.Contains(")2")){
+                var a = Parse(s[(s.IndexOf('(')+1)..s.LastIndexOf(")2")]);
+                return a + a;
+            }
+            else return new Alg(s);
+        }
+        public static Move Inv(Move m){
+            return (Move)((int)m + ((int)m % 3 == 0 ? 2 : (int)m % 3 == 2 ? -2 : 0));
+        }
+        public new Alg Reverse(){
+            Alg alg = [];
+            for (int i = Count - 1; i >= 0; i--)
+                alg.Add(Inv(this[i]));
+            return alg;
         }
         public override string ToString()
         {
