@@ -7,17 +7,17 @@ namespace Luxi
     {
         public State[] state;
 
-        public Corner() => state = Enumerable.Range(0, 8).Select(i => new State{ perm = i, ori = 0 }).ToArray();
+        public Corner() => state = [.. Enumerable.Range(0, 8).Select(i => new State{ perm = i, ori = 0 })];
         public State this[int perm, int ori] => new() { perm = state[perm].perm, ori = (state[perm].ori + ori) % 3 };
         public State this[State s] => new() { perm = state[s.perm].perm, ori = (state[s.perm].ori + s.ori) % 3 };
         public static Corner Random()
         {
             int[] perm = RandomPermutation(8), ori = RandomOrientation(8, 3);
-            return new Corner { state = Enumerable.Range(0, 8).Select(i => new State { perm = perm[i], ori = ori[i] }).ToArray() };
+            return new Corner { state = [.. Enumerable.Range(0, 8).Select(i => new State { perm = perm[i], ori = ori[i] })] };
         }
         public Corner Copy() => new() { state = [.. state] };
         public int GetParity(){
-            return Tools.GetParity(state.Select(s => s.perm).ToArray());
+            return Tools.GetParity([.. state.Select(s => s.perm)]);
         }
         public void Solve(){
             for (int i = 0; i < 8; i++){
@@ -89,7 +89,7 @@ namespace Luxi
             }
         }
 
-        public const string Code = "defghijklabcwmnopqrstxyz";
+        public const string Code = "chtedwgfzabqilsknxmpyojr";
         public void Cycle(string code, int Buffer=3){
             foreach (char c in code)
             {

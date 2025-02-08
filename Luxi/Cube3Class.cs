@@ -42,7 +42,7 @@ namespace Luxi
             oddCornerProbability = oddCornerCDF[oddCornerCDF.Length - 1];
 
             meanParity = oddEdgeProbability * oddCornerProbability / (evenEdgeProbability * evenCornerProbability + oddEdgeProbability * oddCornerProbability);
-            probability = (evenEdgeProbability * evenCornerProbability + oddEdgeProbability * oddCornerProbability) * 2.0;
+            probability = (evenEdgeProbability * evenCornerProbability + oddEdgeProbability * oddCornerProbability) * 0.5;
 
             if((evenEdgeCount == 0 || evenCornerCount == 0) && (oddEdgeCount == 0 || oddCornerCount == 0))
                 throw new Exception("No cube3 can be generated.");

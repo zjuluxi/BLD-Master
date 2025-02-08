@@ -72,17 +72,17 @@ Console.WriteLine(cube.GetScramble());
 
 To use the program well, it's best to customize your need in `Program.cs` by yourself.
 
-## Some statistic results
+## Some statistic results (todo: move to another repo)
 
-### Basic info about conjugacy class
+### Basic info about conjugacy class (will explain)
 
-| Name | Value |
+| Number of cycle pattern of | Value |
 | --- | --- |
-| `EdgeCC.evenList.Count` | 988 |
-| `EdgeCC.oddList.Count` | 979 |
-| `CornerCC.evenList.Count` | 428 |
-| `CornerCC.oddList.Count` | 416 |
-| `WingCC.list.Count` | 5763 |
+| Even Edge  | 988 |
+| Odd Edge | 979 |
+| Even Corner | 428 |
+| Odd Corner | 416 |
+| Wing | 5763 |
 
 ### The distribution of cycle code length and flip/twist count
 
@@ -637,7 +637,7 @@ No constraints on the parity:
 
 Sum = 980995276800 = $2^{11}\times 12!$
 
-Constrained on odd parity:
+Conditioned on odd parity:
 
 | Position | Count        | Probability         | Cumulative Probability |
 | ---      | ---          | ---                 | ---                    |
@@ -659,7 +659,7 @@ Sum = 490497638400 = $2^{10}\times 12!$
 ## Acknowledgements
 
 + Thank github copilot, without which a lazy boy like me may never write this readme.
-+ Many thanks to [Chen Shuang](https://github.com/cs0x7f/min2phase) for the [min2phase](https://github.com/cs0x7f/min2phase) algorithm for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube, which I brutally modified to C# in this project.
++ Many thanks to [Chen Shuang](https://github.com/cs0x7f/min2phase) for the [min2phase](https://github.com/cs0x7f/min2phase) algorithm for solving 333 cube and [TPR-4x4x4-Solver](https://github.com/cs0x7f/TPR-4x4x4-Solver) for solving 444 cube, which I brute-forcely modified to C# in this project.
 
 ## License GPL-3.0
 
